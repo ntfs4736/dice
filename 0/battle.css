@@ -1,0 +1,84 @@
+body {
+  font-family: monospace;
+  text-align: center;
+  margin-top: 60px;
+  background: #222;
+  color: #fff;
+}
+
+h1 {
+  color: #ffd700;
+  letter-spacing: 2px;
+  margin-bottom: 30px;
+}
+
+select,
+button {
+  font-size: 1.2em;
+  margin: 5px;
+  padding: 6px 18px;
+  border-radius: 12px;
+  border: none;
+  background: #444;
+  color: #fff;
+}
+
+button {
+  background: #007bff;
+}
+
+button:hover {
+  background: #ffd700;
+  color: #222;
+}
+
+#coinbar {
+  font-size: 1.5em;
+  color: #ffd700;
+  margin-bottom: 15px;
+}
+
+#battleZone {
+  min-height: 70px;
+}
+
+#battleLog {
+  margin-top: 20px;
+  font-size: 1.1em;
+  color: #aaa;
+  max-width: 580px;
+  margin-left: auto;
+  margin-right: auto;
+  background: #222;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.float-text {
+  position: absolute;
+  color: #ffd700;
+  font-size: 1.8em;
+  font-weight: bold;
+  pointer-events: none;
+  animation: floatUp 1s ease-out forwards;
+  z-index: 9999;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-60px); opacity: 0; }
+}
+.menu-btn {
+  display: inline-block;
+  margin: 16px auto 0 auto;
+  padding: 20px 70px;
+  font-size: 2em;
+  border: none;
+  border-radius: 20px;
+  background: #444;
+  color: #ffd700;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  box-shadow: 0 2px 16px #111b;
+  font-weight: bold;
+}

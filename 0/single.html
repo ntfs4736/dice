@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>骰子計數機</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: monospace; text-align: center; margin-top: 80px; background: #222; color: #fff; }
+    select, button { font-size: 1.5em; margin: 5px; padding: 5px 20px; border-radius: 12px; border: none; background: #444; color: #fff; }
+    button { background: #007bff; }
+    #result { font-size: 3em; margin-top: 30px; transition: 0.2s; }
+    #all { font-size: 1.2em; margin-top: 10px; }
+    #sumCount { font-size: 2.5em; margin: 25px auto 10px auto; font-weight: bold; color: #ffd700; }
+    table { margin: 0 auto 0 auto; border-collapse: collapse; }
+    th, td { border: 1px solid #fff3; padding: 8px 16px; font-size: 1.2em; }
+    th { background: #333; }
+    td { background: #222; }
+    /* 成就視窗 */
+    #achievement {
+      display: none;
+      position: fixed;
+      left: 0; right: 0; top: 0; bottom: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+    }
+    #achievementBox {
+      background: #444;
+      color: #ffd700;
+      border-radius: 22px;
+      padding: 50px 40px 40px 40px;
+      box-shadow: 0 0 40px #000b;
+      font-size: 2em;
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 320px;
+      min-height: 120px;
+      position: relative;
+      animation: popin .3s;
+    }
+    @keyframes popin {
+      from { transform: scale(0.7);}
+      to { transform: scale(1);}
+    }
+    #closeBtn {
+      margin-top: 35px;
+      background: #ffd700;
+      color: #222;
+      border: none;
+      border-radius: 14px;
+      padding: 10px 35px;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #000a;
+      transition: background .2s;
+    }
+    #closeBtn:hover { background: #fff04a; }
+    #trophy {
+      font-size: 2.2em;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 0 4px #fff7);
+    }
+  </style>
+</head>
+<body>
+  <h1>骰子計數 統計你多廢</h1>
+  <div>
+    <span>骰子顆數：</span>
+    <select id="diceCount">
+      <option value="1">1 顆</option>
+      <option value="2">2 顆</option>
+      <option value="3">3 顆</option>
+    </select>
+    <button id="btn" onclick="rollDice()">骰下去啦！</button>
+    <button onclick="resetAll()">清空統計</button>
+  </div>
+  <div id="result">還沒骰啦 怕啥</div>
+  <div id="all"></div>
+
+  <div id="sumCount">總和：0</div>
+  <table>
+    <thead>
+      <tr>
+        <th>點數</th>
+        <th>出現次數</th>
+      </tr>
+    </thead>
+    <tbody id="countTable">
+      <tr><td>1 ⚀</td><td id="cnt1">0</td></tr>
+      <tr><td>2 ⚁</td><td id="cnt2">0</td></tr>
+      <tr><td>3 ⚂</td><td id="cnt3">0</td></tr>
+      <tr><td>4 ⚃</td><td id="cnt4">0</td></tr>
+      <tr><td>5 ⚄</td><td id="cnt5">0</td></tr>
+      <tr><td>6 ⚅</td><td id="cnt6">0</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 成就視窗 -->
+  <div id="achievement">
+    <div id="achievementBox">
+      <div id="trophy">🏆</div>
+      <div id="achieveTitle">成就達成</div>
+      <div id="achieveDetail" style="margin-top:15px;"></div>
+      <button id="closeBtn" onclick="closeAchieve()">收到啦廢物</button>
+    </div>
+  </div>
+
+  <script>
+    let rolling = false
+    // 計數用的array 1~6
+    let counts = [0,0,0,0,0,0]
+    let totalSum = 0
+
+    // 成就紀錄：避免同一成就狂跳
+    let achieveState = {
+      sum100: false,
+      sum500: false,
+      sum1000: false,
+      face10: [false, false, false, false, false, false],   // 1-6
+      face20: [false, false, false, false, false, false],
+      face50: [false, false, false, false, false, false],
+      face100: [false, false, false, false, false, false],
+    }
+
+    function updateTable() {
+      for(let i=1; i<=6; i++) {
+        document.getElementById('cnt'+i).innerText = counts[i-1]
+      }
+      document.getElementById('sumCount').innerText = `總和：${totalSum}`
+    }
+
+    function resetAll() {
+      counts = [0,0,0,0,0,0]
+      totalSum = 0
+      achieveState = {
+        sum100: false,
+        sum500: false,
+        sum1000: false,
+        face10: [false, false, false, false, false, false],
+        face20: [false, false, false, false, false, false],
+        face50: [false, false, false, false, false, false],
+        face100: [false, false, false, false, false, false],
+      }
+      updateTable()
+      document.getElementById('achievement').style.display = 'none'
+      document.getElementById('result').innerHTML = '還沒骰啦 怕啥'
+      document.getElementById('all').innerHTML = ''
+    }
+
+    function showAchieve(title, detail, emoji="🏆") {
+      document.getElementById('achievement').style.display = 'flex'
+      document.getElementById('achieveTitle').innerText = title
+      document.getElementById('achieveDetail').innerText = detail
+      document.getElementById('trophy').innerText = emoji
+    }
+
+    function closeAchieve() {
+      document.getElementById('achievement').style.display = 'none'
+    }
+
+    function checkAchieve() {
+      // 總和
+      if(totalSum >= 1000 && !achieveState.sum1000) {
+        achieveState.sum1000 = true
+        showAchieve("總和破千！", "你是骰到爛手啦！總和 1000", "🔥")
+        return
+      }
+      if(totalSum >= 500 && !achieveState.sum500) {
+        achieveState.sum500 = true
+        showAchieve("骰爆人生", "總和 500 達成 你很閒嗎？", "💪")
+        return
+      }
+      if(totalSum >= 100 && !achieveState.sum100) {
+        achieveState.sum100 = true
+        showAchieve("成就達成", "總和 100！", "🥳")
+        return
+      }
+      // 單一點數次數
+      for(let i=0; i<6; i++) {
+        if(counts[i] >= 100 && !achieveState.face100[i]) {
+          achieveState.face100[i] = true
+          showAchieve(`點數${i+1}出現100次`, `你骰 ${i+1} 點已經骰到天怒人怨\n不累嗎`, "👑")
+          return
+        }
+        if(counts[i] >= 50 && !achieveState.face50[i]) {
+          achieveState.face50[i] = true
+          showAchieve(`點數${i+1}出現50次`, `骰 ${i+1} 50次了 你夠了沒`, "😵‍💫")
+          return
+        }
+        if(counts[i] >= 20 && !achieveState.face20[i]) {
+          achieveState.face20[i] = true
+          showAchieve(`點數${i+1}出現20次`, `骰 ${i+1} 二十次 你有病吧`, "🤑")
+          return
+        }
+        if(counts[i] >= 10 && !achieveState.face10[i]) {
+          achieveState.face10[i] = true
+          showAchieve(`點數${i+1}出現10次`, `骰 ${i+1} 十次而已 不要以為你很行`, "🤡")
+          return
+        }
+      }
+    }
+
+    function rollDice() {
+      if(rolling) return
+      rolling = true
+      document.getElementById('btn').disabled = true
+      let diceCount = parseInt(document.getElementById('diceCount').value)
+      let resultDiv = document.getElementById('result')
+      let allDiv = document.getElementById('all')
+      let count = 0
+
+      allDiv.innerHTML = ''
+
+      let fake = setInterval(()=>{
+        let tmp = []
+        for(let i=0;i<diceCount;i++){
+          let n = Math.floor(Math.random()*6)+1
+          let e = ['⚀','⚁','⚂','⚃','⚄','⚅'][n-1]
+          tmp.push(`${n} ${e}`)
+        }
+        resultDiv.innerHTML = `骰...<br>${tmp.join('　')}`
+        count++
+        if(count>15){
+          clearInterval(fake)
+          let real = []
+          let sum = 0
+          for(let i=0;i<diceCount;i++){
+            let n = Math.floor(Math.random()*6)+1
+            let e = ['⚀','⚁','⚂','⚃','⚄','⚅'][n-1]
+            real.push(`${n} ${e}`)
+            counts[n-1]++
+            sum += n
+          }
+          totalSum += sum
+          resultDiv.innerHTML = `你骰到<br>${real.join('　')}`
+          allDiv.innerHTML = `這次總和：${sum}　${sum==diceCount*6 ? '運氣炸裂啦' : sum==diceCount ? '去買樂透洗臉吧' : '普普通通爛運'}`
+          updateTable()
+          checkAchieve()
+          rolling = false
+          document.getElementById('btn').disabled = false
+        }
+      },60)
+    }
+  </script>
+  <div id="res" style="font-size:2em; margin:30px 0"></div>
+  <a href="index.html" style="display:block; color:#888; margin-top:80px;">回主選單</a>
+</body>
+</html>
