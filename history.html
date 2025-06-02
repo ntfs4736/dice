@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>對戰紀錄</title>
+  <style>
+    body { background: #222; color: #fff; font-family: monospace; text-align: center; }
+    h1 { color: #ffd700; }
+    table { margin: 40px auto; border-collapse: collapse; background: #333; }
+    th, td { border: 1px solid #555; padding: 10px 16px; }
+    th { background: #444; color: #ffd700;}
+    td { background: #222; }
+    .small-link {
+      display: block;
+      margin: 38px auto 0 auto;
+      color: #888;
+      font-size: 1em;
+      text-decoration: underline;
+      cursor: pointer;
+      width: fit-content;
+    }
+    .small-link:hover { color: #ffd700; }
+  </style>
+</head>
+<body>
+  <h1>你的對戰紀錄</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>時間</th>
+        <th>比分</th>
+        <th>賭注</th>
+        <th>結果</th>
+        <th>連分x</th>
+        <th>連勝x</th>
+        <th>獎金</th>
+        <th>剩餘金幣</th>
+      </tr>
+    </thead>
+    <tbody id="tb"></tbody>
+  </table>
+  <span class="small-link" onclick="clearHistory()">清空紀錄</span>
+  <a href="index.html" class="small-link" style="margin-top:8px;">回主選單</a>
+  <script>
+alert("此網頁正在建置中...")
+    let arr = JSON.parse(localStorage.getItem('battle_history') || '[]')
+    let tb = document.getElementById('tb')
+    if(arr.length==0){
+      tb.innerHTML = `<tr><td colspan="8">還沒對戰過啦 快回去輸錢（？</td></tr>`
+    }else{
+      arr.slice().reverse().forEach(r=>{
+        tb.innerHTML += `
+        <tr>
+          <td>${new Date(r.time).toLocaleString()}</td>
+          <td>${r.myScore} : ${r.botScore}</td>
+          <td>${r.bet}</td>
+          <td>${r.result}</td>
+          <td>${r.combo || 1}</td>
+          <td>${r.streak || 1}</td>
+          <td>${r.reward}</td>
+          <td>${r.coins}</td>
+        </tr>`
+      })
+    }
+    function clearHistory(){
+      if(confirm('真的要清空？')) {
+        localStorage.removeItem('battle_history')
+        location.reload()
+      }
+    }
+  </script>
+</body>
+</html>
