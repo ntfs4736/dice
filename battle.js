@@ -47,7 +47,7 @@ function startBattle() {
 
 function showStreak() {
   let streak = getStreak()
-  document.getElementById('streak').innerText = `局外連勝獎勵x${streak}`
+  document.getElementById('streak').innerText = `局外連勝獎勵x${(streak*100)/100}`
 }
 
 function nextRound() {
@@ -138,7 +138,7 @@ function finishBattle() {
     reward = Math.floor(bet * baseMulti * comboMulti * streakMulti)
     setCoins(getCoins()+reward)
     showFloatingText(`獎金 +${reward}`, window.innerWidth/2 - 60, 180, '#00ff88')
-    setStreak(Math.min(streakMulti+0.05, 2))
+    setStreak(Math.min((streakMulti+0.05)*100)/100, 2))
   } else {
     result='LOSE'
     reward = -bet
