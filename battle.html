@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>骰子對戰賭爛場（自動/手動版）</title>
+  <link rel="stylesheet" href="battle.css">
+</head>
+<body>
+  <h1>跟電腦尻骰子 | 賭博對戰</h1>
+  <div id="coinbar"></div>
+  <div>
+    <span>賭注：</span>
+    <select id="bet">
+      <option value="50">50</option>
+      <option value="100">100</option>
+      <option value="200">200</option>
+      <option value="500">500</option>
+      <option value="1000">1000</option>
+      <option value="2000">2000</option>
+      <option value="5000">5000</option>
+      <option value="10000">10000</option>
+    </select>
+    <label style="margin-left:16px;">
+      <input type="checkbox" id="autoMode" checked>
+      自動進行
+    </label>
+    <button onclick="startBattle()" id="startBtn">開始對戰</button>
+    <span id="streak" style="margin-left: 20px; color:#ffd700"></span>
+  </div>
+  <div id="battleZone" style="margin-top: 24px"></div>
+  <div id="battleLog"></div>
+  <div id="msg" style="color: #ffd700; margin-top:40px"></div>
+
+<div style="margin-top:80px; color:#888; font-size:1em; letter-spacing:1px; text-align:center;">
+  <a href="index.html" style="color:#888; text-decoration:underline; display:block; margin-bottom:6px;">回主選單</a>
+  <span onclick="resetGame()" style="cursor:pointer; text-decoration:underline; display:block;">金幣重置</span>
+</div>
+
+  <script src="battle.js"></script>
+</body>
+</html>

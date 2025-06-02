@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>骰子主選單</title>
+  <style>
+    body { background: #222; color: #fff; font-family: monospace; text-align: center; padding-top: 100px; }
+    h1 { color: #ffd700; }
+    .menu-btn {
+      display: block;
+      margin: 32px auto;
+      padding: 28px 70px;
+      font-size: 2em;
+      border: none;
+      border-radius: 20px;
+      background: #444;
+      color: #ffd700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+      box-shadow: 0 2px 16px #111b;
+      font-weight: bold;
+    }
+    .menu-btn:hover {
+      background: #ffd700;
+      color: #222;
+      transform: scale(1.05);
+    }
+    .footer {margin-top:120px; color:#888;}
+  </style>
+</head>
+<body>
+  <h1>骰子遊戲</h1>
+  <button class="menu-btn" onclick="go('single.html')">自己爽骰（單人模式）</button>
+  <button class="menu-btn" onclick="go('battle.html')">跟電腦對戰（賭博模式）</button>
+  <button class="menu-btn" onclick="go('history.html')">對戰紀錄查詢</button>
+  <div class="footer">v1.0 | 這遊戲有夠廢 你還在玩🤡</div>
+  <script>
+    function go(page){
+      window.location.href = page
+    }
+  </script>
+</body>
+</html>
