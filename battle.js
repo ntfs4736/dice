@@ -120,40 +120,7 @@ function showBattle() {
   document.getElementById('battleLog').innerHTML = battle.log.slice(-6).join('<hr>')
 }
 
-function finishBattle() {
-  let result = ''
-  let reward = 0
-  let bet = battle.bet
-  let comboMulti = battle.lastCombo || 1
-  let baseMulti = 0
-  let streakMulti = getStreak()
 
-  if(battle.myScore==5 && (battle.botScore==4||battle.botScore==3)) baseMulti=0.6
-  else if(battle.myScore==5 && battle.botScore==2) baseMulti=0.8
-  else if(battle.myScore==5 && battle.botScore==1) baseMulti=1
-  else if(battle.myScore==5 && battle.botScore==0) baseMulti=1.5
-
-  if(battle.myScore>=5) {
-    result='WIN'
-    reward = Math.floor(bet * baseMulti * comboMulti * streakMulti)
-    setCoins(getCoins()+reward)
-    showFloatingText(`獎金 +${reward}`, window.innerWidth/2 - 60, 180, '#00ff88')
-    setStreak(Math.min((streakMulti+0.05)*100)/100, 2))
-  } else {
-    result='LOSE'
-    reward = -bet
-    setCoins(getCoins()-bet)
-    setStreak(1)
-  }
-  updateCoinbar()
-  showStreak()
-  document.getElementById('msg').innerHTML = result==='WIN'
-    ? `<span style="color:#4f0;font-size:1.5em;">你贏了！獎金+${reward} 金幣</span>`
-    : `<span style="color:#f44;font-size:1.5em;">你被電腦電爆 賠掉${bet} 金幣</span>`
-  document.getElementById('startBtn').disabled = false
-  document.getElementById('startBtn').innerText = '開始對戰'
-  document.getElementById('startBtn').onclick = startBattle
-}
 
 function rollDice() {
   return [1,2,3].map(()=>Math.floor(Math.random()*6)+1)
@@ -206,7 +173,7 @@ function finishBattle() {
     reward = Math.floor(bet * baseMulti * comboMulti * streakMulti)
     setCoins(getCoins()+reward)
     showFloatingText(`獎金 +${reward}`, window.innerWidth/2 - 60, 180, '#00ff88')
-    setStreak(Math.min(streakMulti+0.05, 2))
+    setStreak(Math.min((streakMulti+0.05)*100)/100, 2))
     // 計算式
     calcMsg = `<div style=\"font-size:1em; color:#bbb; margin-top:10px;\">`
       + `獎金計算：${bet*baseMulti} × ${comboMulti} × ${streakMulti} = <b style='color:#ffd700;'>${reward}</b></div>`
