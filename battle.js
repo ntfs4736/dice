@@ -47,7 +47,7 @@ function startBattle() {
 
 function showStreak() {
   let streak = getStreak()
-  document.getElementById('streak').innerText = `局外連勝獎勵x${(streak*100)/100}`
+  document.getElementById('streak').innerText = `局外連勝獎勵x${streak}`
 }
 
 function nextRound() {
@@ -173,7 +173,7 @@ function finishBattle() {
     reward = Math.floor(bet * baseMulti * comboMulti * streakMulti)
     setCoins(getCoins()+reward)
     showFloatingText(`獎金 +${reward}`, window.innerWidth/2 - 60, 180, '#00ff88')
-    setStreak(Math.min((streakMulti+0.05)*100)/100, 2))
+    setStreak(Math.min(streakMulti+0.05, 2))
     // 計算式
     calcMsg = `<div style=\"font-size:1em; color:#bbb; margin-top:10px;\">`
       + `獎金計算：${bet*baseMulti} × ${comboMulti} × ${streakMulti} = <b style='color:#ffd700;'>${reward}</b></div>`
