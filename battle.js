@@ -47,7 +47,7 @@ function startBattle() {
 
 function showStreak() {
   let streak = getStreak()
-  document.getElementById('streak').innerText = `局外連勝獎勵x${streak}`
+  document.getElementById('streak').innerText = `局外連勝獎勵x${cleanNum(streak)}`
 }
 
 function nextRound() {
@@ -175,8 +175,8 @@ function finishBattle() {
     showFloatingText(`獎金 +${reward}`, window.innerWidth/2 - 60, 180, '#00ff88')
     setStreak(Math.min(streakMulti+0.05, 2))
     // 計算式
-    calcMsg = `<div style=\"font-size:1em; color:#bbb; margin-top:10px;\">`
-      + `獎金計算：${bet*baseMulti} × ${comboMulti} × ${streakMulti} = <b style='color:#ffd700;'>${reward}</b></div>`
+calcMsg = `<div style="font-size:1em; color:#bbb; margin-top:10px;">`
+  + `獎金計算：${cleanNum(bet*baseMulti)} × ${cleanNum(comboMulti)} × ${cleanNum(streakMulti)} = <b style='color:#ffd700;'>${reward}</b></div>`
   } else {
     result='LOSE'
     reward = -bet
@@ -195,4 +195,7 @@ function finishBattle() {
   document.getElementById('startBtn').disabled = false
   document.getElementById('startBtn').innerText = '開始對戰'
   document.getElementById('startBtn').onclick = startBattle
+}
+function cleanNum(x) {
+  return parseFloat(x.toFixed(2))
 }
